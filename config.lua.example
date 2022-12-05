@@ -1,0 +1,56 @@
+
+ACCOUNT = IMAP {
+    server = 'mailserver.example.org',
+    username = 'myusername',
+    password = 'mypassword',
+    ssl = 'auto'
+}
+
+
+AUTOCOLLECT_EXCLUDE_SENDERS = "@example%.org"
+
+function FILTER_INBOX()
+
+    ----- Move Misc
+    results = ACCOUNT.INBOX:contain_from('someone@example.org') *
+              ACCOUNT.INBOX:contain_subject('[SPECIAL]')
+    move_messages(results, "03_SpecialMails")
+
+
+    ----- Move Known Senders
+    mbox_inbox = "INBOX"
+    mbox_default = "01_Inbox"
+    messages_inbox = ACCOUNT[mbox_inbox]:select_all()
+    move_messages_with_previous_senders(messages_inbox, mbox_default)
+
+    mbox_unknown = "02_UnknownSenders"
+    messages_inbox_left = ACCOUNT[mbox_inbox]:select_all()
+    move_messages(messages_inbox_left, mbox_unknown)
+
+end
+
+
+function FILTER_DAILY()
+
+    ----- Move seen old messages to suitable archive
+    min_age = 7
+    messages_seen_old = ACCOUNT[mbox_default]:is_older(min_age) *
+                        ACCOUNT[mbox_default]:is_unflagged() *
+                        ACCOUNT[mbox_default]:is_seen()
+
+    if debug then
+        dump_messages("Seen Old", messages_seen_old)
+    end
+
+    automove_mailboxnames = {
+        "20_Family",
+        "30_Friends",
+        "30_Business",
+        "40_System"
+    }
+
+    for _, mailboxname in ipairs(automove_mailboxnames) do
+        move_messages_with_previous_senders(messages_seen_old, mailboxname)
+    end
+
+end
