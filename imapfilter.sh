@@ -1,2 +1,4 @@
 #!/bin/bash
-imapfilter -c imapfilter.lua -l log.err "$@" 2>&1 | tee log.out
+export LUA_PATH="$PWD/lua/?.lua;$PWD/?.lua"
+pkill --uid `id -un` --exact --echo imapfilter
+imapfilter -c lua/imapfilter.lua -l out.log -n "$@"
