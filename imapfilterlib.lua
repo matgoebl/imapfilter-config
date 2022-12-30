@@ -71,7 +71,7 @@ function move_messages(messages_to_move, mailboxname)
 end
 
 function load_senders(mailboxname)
-    local filename = mailboxname .. ".senders"
+    local filename = SENDERS_PATH .. "/" .. mailboxname .. ".senders"
     local file = io.open(filename, "r")
     local senders = {}
     if file then
@@ -85,7 +85,7 @@ function load_senders(mailboxname)
 end
 
 function save_senders(mailboxname, senders)
-    local filename = mailboxname .. ".senders"
+    local filename = SENDERS_PATH .. "/" .. mailboxname .. ".senders"
     local file = io.open(filename, "w")
     if file then
         for _, sender in ipairs(senders) do

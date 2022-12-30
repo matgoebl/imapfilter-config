@@ -8,6 +8,8 @@ ACCOUNT = IMAP {
 
 
 AUTOCOLLECT_EXCLUDE_SENDERS = "@example%.org"
+SENDERS_PATH="."
+
 
 function FILTER_INBOX()
 
