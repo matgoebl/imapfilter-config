@@ -43,6 +43,9 @@ end
 
 function DAEMON_LOOP()
     date_last = ""  -- trigger execution in the first iteration
+    if FILTER_INIT then
+        FILTER_INIT()
+    end
     while true do
         print("Running FILTER_INBOX()...")
         FILTER_INBOX()
