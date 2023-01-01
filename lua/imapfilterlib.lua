@@ -62,10 +62,7 @@ end
 function move_messages(messages_to_move, mailboxname)
     if #messages_to_move > 0 then
         dump_messages("Moving to " .. mailboxname, messages_to_move)
-        if not contains(MAILBOXES, mailboxname) then
-            ACCOUNT:create_mailbox(mailboxname)
-        end
-        --account:delete_mailbox(name)    
+        create_mbox(mailboxname)
         messages_to_move:move_messages(ACCOUNT[mailboxname])
     end
 end
