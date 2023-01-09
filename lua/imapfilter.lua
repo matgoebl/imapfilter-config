@@ -35,6 +35,17 @@ function MAIN()
             os.execute("sleep 60")
         end
     else
+        DEBUGLOGFILE = os.getenv('DEBUGLOGFILE')
+        if DEBUGLOGFILE then
+            debug = true
+            logfile = io.open (DEBUGLOGFILE, 'w')
+            real_print = print
+            print = function(...)
+                logfile:write(table.concat({...}, "\t") .. "\n")
+                logfile:flush()
+            end
+        end
+
         become_daemon(600, DAEMON_LOOP)
     end
 
@@ -42,6 +53,7 @@ end
 
 
 function DAEMON_LOOP()
+
     date_last = ""  -- trigger execution in the first iteration
     if FILTER_INIT then
         FILTER_INIT()
