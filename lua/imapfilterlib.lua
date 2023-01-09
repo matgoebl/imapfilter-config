@@ -28,6 +28,12 @@ function extract_email(sender)
     return email
 end
 
+function extract_domain(sender)
+    local email = extract_email(sender)
+    local domain = string.match(email, "(@.*)$")
+    return domain
+end
+
 function contains(list, item)
     if not list or not item then
         return false
@@ -133,7 +139,8 @@ function messages_from_senders(messages, senders)
         local to = extract_email(field(messagecontent, 'to'))
         local cc = extract_email(field(messagecontent, 'cc'))
         local bcc = extract_email(field(messagecontent, 'bcc'))
-        local selected = contains(senders, from) or contains(senders, to) or contains(senders, cc) or contains(senders, bcc)
+        local from_domain = extract_domain(field(messagecontent, 'from'))
+        local selected = contains(senders, from) or contains(senders, to) or contains(senders, cc) or contains(senders, bcc) or contains(senders, from_domain)
         if selected then
             table.insert(messages_selected, message)
         end
