@@ -1,3 +1,16 @@
+----- Generic Helpers
+
+function getenv_bool(key)
+    local val = os.getenv(key)
+    if val then
+        val = string.lower(string.sub(val,1,1))
+        if val == 't' or val == 'y' or val == '1' then
+            return true
+        end
+    end
+    return false
+end
+
 ----- Message Helpers
 
 function field(message, key)

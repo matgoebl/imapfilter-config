@@ -6,9 +6,9 @@ function MAIN()
 
     ----- Options
     options.info = os.getenv('SERVER_INFO')
-    debug = os.getenv('DEBUG')
-    reload_senders = os.getenv('RELOAD_SENDERS')
-    delete_all = os.getenv('DELETE_ALL')
+    debug = getenv_bool('DEBUG')
+    reload_senders = getenv_bool('RELOAD_SENDERS')
+    delete_all = getenv_bool('DELETE_ALL')
     require("config")
 
     if not ACCOUNT or not FILTER_INBOX or not FILTER_DAILY then
