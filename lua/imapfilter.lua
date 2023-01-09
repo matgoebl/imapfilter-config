@@ -9,6 +9,7 @@ function MAIN()
     debug = getenv_bool('DEBUG')
     reload_senders = getenv_bool('RELOAD_SENDERS')
     delete_all = getenv_bool('DELETE_ALL')
+    dryrun = getenv_bool('DRYRUN')
     require("config")
 
     if not ACCOUNT or not FILTER_INBOX or not FILTER_DAILY then

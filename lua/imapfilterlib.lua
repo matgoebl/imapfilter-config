@@ -66,7 +66,7 @@ end
 ----- Mailbox Helpers
 
 function create_mbox(name)
-    if not contains(MAILBOXES, name) then
+    if not contains(MAILBOXES, name) and not dryrun then
         ACCOUNT:create_mailbox(name)
     end
     --account:delete_mailbox(name)    
@@ -74,9 +74,11 @@ end
 
 function move_messages(messages_to_move, mailboxname)
     if #messages_to_move > 0 then
-        dump_messages("Moving to " .. mailboxname, messages_to_move)
-        create_mbox(mailboxname)
-        messages_to_move:move_messages(ACCOUNT[mailboxname])
+        dump_messages("Moving to " .. mailboxname .. (dryrun and " (dryrun)" or ""), messages_to_move)
+        if not dryrun then
+            create_mbox(mailboxname)
+            messages_to_move:move_messages(ACCOUNT[mailboxname])
+        end
     end
 end
 
