@@ -59,7 +59,7 @@ function dump_messages(msg, messages)
         local from = field(messagecontent, 'from')
         local date = messagecontent:fetch_date()
         local email = extract_email(from)
-        table.insert(msgs, "- " .. email .. "\t" .. subject .. "\t" .. date)
+        table.insert(msgs, "- " .. date .. "\t" .. email .. "\t" .. subject)
         -- print("- ", date, from, subject)
     end
     table.sort(msgs)
@@ -151,7 +151,7 @@ end
 
 function move_messages_with_previous_senders(messages, mailboxname)
     local senders = load_senders(mailboxname)
-    if reload_senders or not senders or #senders == 0 then
+    if reload_senders or not senders then
         -- print("Collecting senders in " .. mailboxname .. "...")
         senders = senders_in_mailbox(mailboxname, senders)
         save_senders(mailboxname, senders)
