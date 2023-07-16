@@ -69,6 +69,20 @@ end
 
 
 
+----- UTF8 Message Helpers
+base64 = require("base64")
+utf8matcher = require("match_utf8_field")
+
+function match_messages_utf8_field_items(messages_input, field, items)
+    local messages_output = Set({})
+    for _, item in ipairs( items ) do
+        messages_output = messages_output + utf8matcher.match_utf8_field(messages_input, field, item)
+    end
+    return messages_output
+end
+
+
+
 ----- Mailbox Helpers
 
 function create_mbox(name)
@@ -114,9 +128,9 @@ function save_senders(mailboxname, senders)
 end
 
 
-function senders_in_mailbox(mailboxname, senders)
+function senders_in_mailbox(mailboxname, old_senders)
     local messages = ACCOUNT[mailboxname]:select_all()
-    local senders = senders or {}
+    local senders = old_senders or {}
     for _, message in ipairs(messages) do
         local mailbox, uid = table.unpack(message)
         local messagecontent = mailbox[uid]
