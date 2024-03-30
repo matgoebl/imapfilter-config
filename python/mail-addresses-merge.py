@@ -6,7 +6,7 @@ import re
 import glob
 
 @click.command()
-@click.option('-f', '--file',    help='File with eMail addresses to read and write back.', type=click.File('r+'))
+@click.option('-f', '--file',    help='File with eMail addresses to read and write back.', type=click.File('r+'), required=True)
 @click.option('-a', '--add',     help='File with addresses to add (default: stdin)', type=click.File('r'), default='-')
 @click.option('-x', '--exclude', help='Exclude email addresses matching given regex.')
 @click.option('-e', '--existing',help='Exclude existing email addresses found in files matching the given file glob (e.g. lists/*.senders).')
