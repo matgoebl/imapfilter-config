@@ -9,7 +9,7 @@ if [ "$1" = "-n" ]; then  # dry-run
 elif [ "$1" = "-d" ]; then  # debug
  DEBUG=y imapfilter -c lua/imapfilter.lua -l err.log 2>&1 | tee out.log
 elif [ "$1" = "-b" ]; then  # background
- DEBUG=y imapfilter -c lua/imapfilter.lua -l err.log > out.log 2>&1 &
+ DEBUGLOGFILE=debug.log imapfilter -c lua/imapfilter.lua -l err.log > out.log 2>&1 &
 else  # normal
  DEBUGLOGFILE=debug.log imapfilter -c lua/imapfilter.lua -l err.log
  sleep 1

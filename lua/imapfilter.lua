@@ -42,7 +42,11 @@ function MAIN()
             logfile = io.open (DEBUGLOGFILE, 'w')
             real_print = print
             print = function(...)
-                logfile:write(table.concat({...}, "\t") .. "\n")
+                for n, v in pairs( {...} ) do
+                    if n > 1 then logfile:write("\t") end
+                    logfile:write(tostring(v))
+                end
+                logfile:write("\n")
                 logfile:flush()
             end
         end
@@ -72,8 +76,8 @@ function DAEMON_LOOP()
         end
 
         print("waiting for IMAP event...")
-        local ok, event = ACCOUNT.INBOX:enter_idle()
-        if ok then
+        local call_ok, idle_ok, event = pcall( function () return ACCOUNT.INBOX:enter_idle() end )
+        if call_ok and idle_ok then
             print(string.format("IMAP event: %s",event))
         else
             print("IMAP IDLE failed, delaying...")
