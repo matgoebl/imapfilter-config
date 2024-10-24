@@ -73,10 +73,25 @@ end
 base64 = require("base64")
 utf8matcher = require("match_utf8_field")
 
+local function pattern_escape(s)
+    return (s:gsub('%%', '%%%%')
+             :gsub('^%^', '%%^')
+             :gsub('%$$', '%%$')
+             :gsub('%(' , '%%(')
+             :gsub('%)' , '%%)')
+             :gsub('%.' , '%%.')
+             :gsub('%[' , '%%[')
+             :gsub('%]' , '%%]')
+             :gsub('%*' , '%%*')
+             :gsub('%+' , '%%+')
+             :gsub('%-' , '%%-')
+             :gsub('%?' , '%%?'))
+end
+
 function match_messages_utf8_field_items(messages_input, field, items)
     local messages_output = Set({})
     for _, item in ipairs( items ) do
-        messages_output = messages_output + utf8matcher.match_utf8_field(messages_input, field, item)
+        messages_output = messages_output + utf8matcher.match_utf8_field(messages_input, field, pattern_escape(item))
     end
     return messages_output
 end
@@ -169,9 +184,9 @@ function move_messages_with_previous_senders(messages, mailboxname)
         -- print("Collecting senders in " .. mailboxname .. "...")
         senders = senders_in_mailbox(mailboxname, senders)
         save_senders(mailboxname, senders)
-        -- if debug then
+        if debug then
             list("Collected senders in " .. mailboxname, senders)
-        -- end
+        end
     end
     local messages_to_move = messages_from_senders(messages, senders)
     move_messages(messages_to_move, mailboxname)
