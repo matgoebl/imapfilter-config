@@ -7,10 +7,15 @@ function MAIN()
     ----- Options
     options.info = os.getenv('SERVER_INFO')
     debug = getenv_bool('DEBUG')
+    debug_trace = getenv_bool('DEBUG_TRACE')
     reload_senders = getenv_bool('RELOAD_SENDERS')
     delete_all = getenv_bool('DELETE_ALL')
     dryrun = getenv_bool('DRYRUN')
     require("config")
+
+    function print_trace(...) end
+    if debug_trace then print_trace=print end
+
 
     if not ACCOUNT or not FILTER_INBOX or not FILTER_DAILY then
         print("Error: config.lua must initialize ACCOUNT and define FILTER_INBOX() and FILTER_DAILY().")

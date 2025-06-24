@@ -12,9 +12,11 @@ function methods.decode_utf8_field(value, field_name)
       field_prefix = ('%s: '):format(field_name)
     end
     local return_value = ''
-    local value_start = value:sub(1 + field_prefix:len(), 8 + field_prefix:len())
-    if value_start == '=?UTF-8?' or value_start == '=?utf-8?' then
-      value = value:sub(field_prefix:len(), value:len())
+    local value_start = value:sub(field_prefix:len(), value:len())
+    print_trace("decode_utf8_field: trying",value_start)
+    if string.find(value_start, '^%s*=[?][Uu][Tt][Ff][-]8[?]') then
+      value = value_start
+      print_trace("decode_utf8_field: found",value)
       for part in string.gmatch(value, ' ?=[?][Uu][Tt][Ff][-]8[?]([BbQq][?].-)[?]=') do
         local part_type = part:sub(1, 1)
         local part_value = part:sub(3)
@@ -38,6 +40,7 @@ function methods.match_utf8_field(messages, field, pattern)
     local mailbox, uid = table.unpack(message)
     value = mailbox[uid]:fetch_field(field)
     value = methods.decode_utf8_field(value, field)
+    print_trace("match_utf8_field:",field, value, pattern, value:match(pattern) and "MATCHED")
     if (value:match(pattern)) then
       table.insert(results, { mailbox, uid })
     end
