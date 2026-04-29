@@ -7,7 +7,7 @@ rm -f *.log
 if [ "$1" = "-n" ]; then  # dry-run
  DEBUG=y DRYRUN=y imapfilter -c lua/imapfilter.lua
 elif [ "$1" = "-d" ]; then  # debug
- DEBUG=y imapfilter -c lua/imapfilter.lua -l err.log 2>&1 | tee out.log
+ DEBUG=y NO_INITIAL_DAILY=y DEBUG_TRACE=y imapfilter -c lua/imapfilter.lua -l err.log 2>&1 | tee out.log
 elif [ "$1" = "-b" ]; then  # background
  DEBUGLOGFILE=debug.log imapfilter -c lua/imapfilter.lua -l err.log > out.log 2>&1 &
 else  # normal

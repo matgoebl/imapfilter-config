@@ -5,6 +5,19 @@ Install [imapfilter](https://github.com/lefcha/imapfilter) e.g. via `apt install
 Copy `config.lua.example` to `config.lua` and adapt it to your needs.  
 Run `imapfilter.sh`.
 
+Set the following environment variables for debugging:
+- `DEBUG=y`
+- `DEBUG_TRACE=y`
+- `DEBUGLOGFILE=debug.log`
+- `NO_INITIAL_DAILY=y`
+- `DRYRUN=y`
+
+Configure your IMAP server with these environment variables:
+- `IMAP_SERVER='imap.server.net'`
+- `IMAP_USERNAME='your@name.net'`
+- `IMAP_PASSWORD='xxx'`
+
+
 ## LICENSES
 
 Imported:

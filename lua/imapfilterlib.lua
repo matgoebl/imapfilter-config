@@ -118,7 +118,7 @@ function move_messages(messages_to_move, mailboxname)
 end
 
 function load_senders(mailboxname)
-    local filename = SENDERS_PATH .. "/" .. mailboxname .. ".senders"
+    local filename = SENDERS_PATH .. "/" .. mailboxname
     local file = io.open(filename, "r")
     local senders = {}
     if file then
@@ -132,7 +132,7 @@ function load_senders(mailboxname)
 end
 
 function save_senders(mailboxname, senders)
-    local filename = SENDERS_PATH .. "/" .. mailboxname .. ".senders"
+    local filename = SENDERS_PATH .. "/" .. mailboxname
     local file = io.open(filename, "w")
     if file then
         for _, sender in ipairs(senders) do
@@ -142,6 +142,13 @@ function save_senders(mailboxname, senders)
     end
 end
 
+function add_to_all_senders(senders)
+    for _, sender in ipairs(senders) do
+        if not contains(ALL_SENDERS, sender) then
+            table.insert(ALL_SENDERS, sender)
+        end
+    end
+end
 
 function senders_in_mailbox(mailboxname, old_senders)
     local messages = ACCOUNT[mailboxname]:select_all()
@@ -170,6 +177,7 @@ function messages_from_senders(messages, senders)
         local bcc = extract_email(field(messagecontent, 'bcc'))
         local from_domain = extract_domain(field(messagecontent, 'from'))
         local selected = contains(senders, from) or contains(senders, to) or contains(senders, cc) or contains(senders, bcc) or contains(senders, from_domain)
+        print_trace("messages_from_senders:",from,selected,table.concat(senders,';'))
         if selected then
             table.insert(messages_selected, message)
         end
@@ -180,10 +188,13 @@ end
 
 function move_messages_with_previous_senders(messages, mailboxname)
     local senders = load_senders(mailboxname)
-    if reload_senders or not senders then
-        -- print("Collecting senders in " .. mailboxname .. "...")
+    if reload_senders then
+        if debug then
+            print("Collecting senders in " .. mailboxname .. "...")
+        end
         senders = senders_in_mailbox(mailboxname, senders)
         save_senders(mailboxname, senders)
+        add_to_all_senders(senders)
         if debug then
             list("Collected senders in " .. mailboxname, senders)
         end
